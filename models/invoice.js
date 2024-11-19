@@ -23,19 +23,20 @@ const InvoiceSchema = new mongoose.Schema(
     amountReceived: { type: Number, default: 0 },
     deleveryadress: { type: String },
     resivename: { type: String },
+    systemId: {
+      type: String,
+      required: true,
+    },
+
     offlineSync: {
       isOfflineSync: {
-          type: Boolean,
-          default: false,
+        type: Boolean,
+        default: false,
       },
       offlineSyncDate: {
-          type: Date,
+        type: Date,
       },
-  },
-  systemId: {
-    type: String,
-    required: true,
-},
+    },
 
     tableid: { type: mongoose.Schema.Types.ObjectId, ref: "Table" },
     food: [
