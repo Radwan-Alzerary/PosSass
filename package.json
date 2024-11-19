@@ -1,0 +1,35 @@
+{
+  "name": "possass",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tailwind:css": "npx tailwindcss -i ./views/input.css -o ./public/dist/output.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "flowbite": "^2.5.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-html-to-image": "^5.0.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "node-thermal-printer": "^4.4.3",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.4.49",
+    "uuid": "^11.0.3"
+  }
+}

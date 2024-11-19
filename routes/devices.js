@@ -1,0 +1,121 @@
+// routes/devices.js
+
+const express = require("express");
+const router = express.Router();
+const Device = require("../models/devices");
+const User = require("../models/user");
+
+// Device Types and Roles
+const deviceTypes = ["A4 Printer", "Thermal Printer"];
+const deviceRoles = ["كاشير", "دلفري", "مطبخ", "نداء اول", "نداء ثاني","شباب","عوائل"];
+const connectionTypes = ["USB", "Ethernet", "Wi-Fi","interface"];
+const SystemSetting = require("../models/systemSetting");
+const Category = require("../models/category");
+
+/* CREATE */
+
+// Show form to create new device
+router.get("/new",async (req, res) => {
+  const user = await User.findById(req.userId);
+    const systemSetting = await SystemSetting.findOne({specialId:user.systemId});
+    const category = await Category.find({systemId:user.systemId})
+  res.render("devices/new", { deviceTypes, deviceRoles, connectionTypes,role: user.role ,role: user.role,systemSetting,category });
+});
+
+// Add new device to DB
+router.post("/", async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    const data = req.body.device
+    data.systemId = user.systemId
+    const newDevice = new Device(req.body.device);
+    console.log(req.body)
+    const category = await Category.find({systemId:user.systemId})
+
+    await newDevice.save();
+    res.redirect("/devices");
+  } catch (err) {
+    console.error(err);
+    res.render("devices/new", { error: err.message, deviceTypes, deviceRoles, connectionTypes,category });
+  }
+});
+
+/* READ */
+
+// Show all devices
+router.get("/", async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    const systemSetting = await SystemSetting.findOne({specialId:user.systemId});
+
+    const devices = await Device.find({systemId:user.systemId});
+
+    res.render("devices/index", { devices,role: user.role ,systemSetting});
+  } catch (err) {
+    console.error(err);
+    res.send("Error retrieving devices");
+  }
+});
+
+// Show one device
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    const systemSetting = await SystemSetting.findOne({specialId:user.systemId});
+
+    const device = await Device.findById(req.params.id);
+
+    res.render("devices/show", { device ,role: user.role,systemSetting});
+  } catch (err) {
+    console.error(err);
+    res.send("Error retrieving device");
+  }
+});
+
+/* UPDATE */
+
+// Show form to edit device
+router.get("/:id/edit", async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    const systemSetting = await SystemSetting.findOne({specialId:user.systemId});
+
+    const device = await Device.findById(req.params.id);
+    const category = await Category.find({systemId:user.systemId})
+
+    res.render("devices/edit", { device, deviceTypes, deviceRoles, connectionTypes,role: user.role,systemSetting,category });
+  } catch (err) {
+    console.error(err);
+    res.send("Error retrieving device");
+  }
+});
+
+// Update device in DB
+router.post("/update", async (req, res) => {
+  try {
+    await Device.findByIdAndUpdate(req.body.id, req.body.device);
+    
+    console.log(req.body.device)
+    res.redirect(`/devices/${req.body.id}`);
+  } catch (err) {
+    console.error(err);
+    res.send("Error updating device");
+  }
+});
+/* DELETE */
+// Delete device from DB
+router.delete("/:id", async (req, res) => {
+  try {
+    await Device.findByIdAndDelete(req.params.id);
+    res.redirect("/devices");
+  } catch (err) {
+    console.error(err);
+    res.send("Error deleting device");
+  }
+});
+
+module.exports = router;

@@ -1,0 +1,145 @@
+
+
+</section>
+<%- include('./structure/sidebar'); %>
+
+<script src="/js/flowbite.min.js"></script>
+
+<script>
+  const navLinks = document.querySelector('.nav-links')
+  function onToggleMenu(e) {
+    e.name = e.name === 'menu' ? 'close' : 'menu'
+
+    var menuDiv = document.getElementById("mobile-menu-2");
+    menuDiv.style.display = e.name === 'close' ? 'block' : 'none';
+
+  }
+</script>
+<script src="/js/autoComplete.js"></script>
+<script>
+ async function openCashdraw() {
+    try {
+      // Define the API endpoint
+      const endpoint = "/invoice/openCashdraw";
+
+      // Make the POST request
+      const response = await fetch(endpoint, {
+        method: "POST", // Specify the method as POST
+        headers: {
+          "Content-Type": "application/json", // Set the content type to JSON
+        },
+      });
+
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
+</script>
+<script>
+
+
+
+  const autoCompleteJS = new autoComplete({
+    data: {
+      src: async () => {
+        try {
+          // Loading placeholder text
+          document
+            .getElementById("autoComplete")
+            .setAttribute("placeholder", "Loading...");
+          // Fetch External Data Source
+          const source = await fetch(
+            "http://localhost:3000/food/getall"
+          );
+          const data = await source.json();
+          // Post Loading placeholder text
+          document
+            .getElementById("autoComplete")
+            .setAttribute("placeholder", autoCompleteJS.placeHolder);
+          // Returns Fetched data
+          return data;
+        } catch (error) {
+          return error;
+        }
+      },
+      keys: ["name"],
+      cache: true,
+      filter: (list) => {
+        // Filter duplicates
+        // incase of multiple data keys usage
+        const filteredResults = Array.from(
+          new Set(list.map((value) => value.match))
+        ).map((food) => {
+          return list.find((value) => value.match === food);
+        });
+
+        return filteredResults;
+      }
+    },
+    placeHolder: "اضافة منتج يدوي",
+    resultsList: {
+      element: (list, data) => {
+        const info = document.createElement("p");
+        if (data.results.length > 0) {
+          info.innerHTML = `العثور على <strong>${data.results.length}</strong> من <strong>${data.matches.length}</strong> نتيجة`;
+        } else {
+          info.innerHTML = `العثور <strong>${data.matches.length}</strong> من نتيجة <strong>"${data.query}"</strong>`;
+        }
+        list.prepend(info);
+      },
+      noResults: true,
+      maxResults: 15,
+      tabSelect: true
+    },
+    resultItem: {
+      element: (item, data) => {
+        // Modify Results Item Style
+        item.style = "display: flex; justify-content: space-between; align-items: start;";
+        // Modify Results Item Content
+        item.innerHTML = `
+      <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+        ${data.value.name}
+      </span>
+      <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+        ${data.value.category ? data.value.category.name : "لا يوجد"}
+      </span>
+      <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+     ${data.value.cost}
+      </span>`;
+      },
+      highlight: true
+    },
+    events: {
+      input: {
+        focus: () => {
+          if (autoCompleteJS.input.value.length) autoCompleteJS.start();
+        }
+      }
+    }
+  });
+  // autoCompleteJS.input.addEventListener("init", function (event) {
+  //   console.log(event);
+  // });
+
+  // autoCompleteJS.input.addEventListener("response", function (event) {
+  //   console.log(event.detail);
+  // });
+
+  // autoCompleteJS.input.addEventListener("results", function (event) {
+  //   console.log(event.detail);
+  // });
+
+  // autoCompleteJS.input.addEventListener("open", function (event) {
+  //   console.log(event.detail);
+  // });
+
+  // autoCompleteJS.input.addEventListener("navigate", function (event) {
+  //   console.log(event.detail);
+  // });
+</script>
+<script src="js/axiosmin.js"></script>
+
+</body>
+
+</html>
