@@ -42,6 +42,7 @@ router.post('/sync', async (req, res) => {
         const Model = modelEntry.model;
         console.log(systemId)
         data.systemId = systemId
+        console.log(data)
         // Find existing document by _id
         const existingDoc = await Model.findById(data._id);
 
